@@ -6,7 +6,7 @@ import (
 )
 
 func main() {
-	passwords := []string{"pass123", "bobsecure", "admin456"}
+	passwords := []string{"pass456", "long123", "890admin"}
 
 	for _, pw := range passwords {
 		hash, err := utils.HashPassword(pw)

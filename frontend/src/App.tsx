@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import './App.css'
 import { Api } from './shared'
+import Nickname from './components/Nickname';
 
 function App() {
   const [username, setUsername] = useState('')
@@ -18,14 +19,14 @@ function App() {
         <input type="text" placeholder="Username" value={username} onChange={(e) => setUsername(e.target.value)} />
         <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
         <button 
-        className='login-button'
-        onClick={() => Api.userLoginPost({username, password}).then (
+          className='login-button'
+          onClick={() => Api.userLoginPost({ body: { username, password } }).then (
           (response) => {
             setToken(response.token)
             setIsLoggedIn(true)
           }
-        ).catch((err) => { alert(err.message)})
-        }
+          ).catch((err) => { alert(err.message)})
+          }
         >Login</button>
       </div>
     </div>
