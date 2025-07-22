@@ -15,25 +15,25 @@
 
 import * as runtime from '../runtime';
 import type {
-  UserInfoGet200Response,
+  NickNameResp,
   UserLoginPost200Response,
-  UserLoginPostRequest,
+  UserLoginReq,
 } from '../models/index';
 import {
-    UserInfoGet200ResponseFromJSON,
-    UserInfoGet200ResponseToJSON,
+    NickNameRespFromJSON,
+    NickNameRespToJSON,
     UserLoginPost200ResponseFromJSON,
     UserLoginPost200ResponseToJSON,
-    UserLoginPostRequestFromJSON,
-    UserLoginPostRequestToJSON,
+    UserLoginReqFromJSON,
+    UserLoginReqToJSON,
 } from '../models/index';
 
 export interface UserInfoGetRequest {
     authorization?: string;
 }
 
-export interface UserLoginPostOperationRequest {
-    userLoginPostRequest?: UserLoginPostRequest;
+export interface UserLoginPostRequest {
+    userLoginReq?: UserLoginReq;
 }
 
 /**
@@ -45,7 +45,7 @@ export class DefaultApi extends runtime.BaseAPI {
      * 
      * Get nickname
      */
-    async userInfoGetRaw(requestParameters: UserInfoGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<UserInfoGet200Response>> {
+    async userInfoGetRaw(requestParameters: UserInfoGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<NickNameResp>> {
         const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
@@ -54,6 +54,14 @@ export class DefaultApi extends runtime.BaseAPI {
             headerParameters['Authorization'] = String(requestParameters['authorization']);
         }
 
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = await token("bearer", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
 
         let urlPath = `/user/info`;
 
@@ -64,14 +72,14 @@ export class DefaultApi extends runtime.BaseAPI {
             query: queryParameters,
         }, initOverrides);
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => UserInfoGet200ResponseFromJSON(jsonValue));
+        return new runtime.JSONApiResponse(response, (jsonValue) => NickNameRespFromJSON(jsonValue));
     }
 
     /**
      * 
      * Get nickname
      */
-    async userInfoGet(requestParameters: UserInfoGetRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<UserInfoGet200Response> {
+    async userInfoGet(requestParameters: UserInfoGetRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<NickNameResp> {
         const response = await this.userInfoGetRaw(requestParameters, initOverrides);
         return await response.value();
     }
@@ -80,7 +88,7 @@ export class DefaultApi extends runtime.BaseAPI {
      * 
      * User login
      */
-    async userLoginPostRaw(requestParameters: UserLoginPostOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<UserLoginPost200Response>> {
+    async userLoginPostRaw(requestParameters: UserLoginPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<UserLoginPost200Response>> {
         const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
@@ -95,7 +103,7 @@ export class DefaultApi extends runtime.BaseAPI {
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
-            body: UserLoginPostRequestToJSON(requestParameters['userLoginPostRequest']),
+            body: UserLoginReqToJSON(requestParameters['userLoginReq']),
         }, initOverrides);
 
         return new runtime.JSONApiResponse(response, (jsonValue) => UserLoginPost200ResponseFromJSON(jsonValue));
@@ -105,7 +113,7 @@ export class DefaultApi extends runtime.BaseAPI {
      * 
      * User login
      */
-    async userLoginPost(requestParameters: UserLoginPostOperationRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<UserLoginPost200Response> {
+    async userLoginPost(requestParameters: UserLoginPostRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<UserLoginPost200Response> {
         const response = await this.userLoginPostRaw(requestParameters, initOverrides);
         return await response.value();
     }

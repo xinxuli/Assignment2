@@ -1,16 +1,16 @@
 import { useState } from 'react'
 import './App.css'
-import { Api } from './shared'
-import Nickname from './components/Nickname';
+import { getApi, initApi } from './shared'
+import { tokenStore, userInfoStore } from './store';
+import { useNavigate } from "react-router-dom";
 
 function App() {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
-  const [token, setToken] = useState('')
-  const [isLoading, setIsLoading] = useState(false)
-  const [isLoggedIn, setIsLoggedIn] = useState(false)
-  const [isRegistering, setIsRegistering] = useState(false)
-
+  const isLogin = () => {
+    return !!tokenStore.token
+  }
+  let navigate = useNavigate();
   return (
     < div className="userlogin-app">
       <h1>User Login</h1>
@@ -20,10 +20,18 @@ function App() {
         <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
         <button 
           className='login-button'
-          onClick={() => Api.userLoginPost({ body: { username, password } }).then (
-          (response) => {
-            setToken(response.token)
-            setIsLoggedIn(true)
+          onClick={() => getApi().userLoginPost({ userLoginReq: { username, password } }).then (
+          async (response) => {
+            tokenStore.token = response.token
+            console.log(response.token)
+            initApi(response.token)
+
+            const resp = await getApi().userInfoGet()
+          
+            userInfoStore.nickname =resp.nickName
+
+            navigate("/hello");
+
           }
           ).catch((err) => { alert(err.message)})
           }

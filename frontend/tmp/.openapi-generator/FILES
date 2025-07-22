@@ -6,12 +6,10 @@ package.json
 src/apis/DefaultApi.ts
 src/apis/index.ts
 src/index.ts
-src/models/Nick.ts
-src/models/Token.ts
-src/models/User.ts
-src/models/UserInfoGet200Response.ts
+src/models/NickNameResp.ts
+src/models/TokenResp.ts
 src/models/UserLoginPost200Response.ts
-src/models/UserLoginPostRequest.ts
+src/models/UserLoginReq.ts
 src/models/index.ts
 src/runtime.ts
 tsconfig.esm.json

@@ -1,13 +1,11 @@
-import { useState } from 'react';
+import { userInfoStore } from "../store";
 
 type NicknameProps = { nickname: string };
 
-function Nickname({ nickname }: NicknameProps) {
+export const Nickname = () => {
   return (
     <div>
-      <h2>Hi, {nickname}!</h2>
+      <h2>Hi, {userInfoStore.nickname}!</h2>
     </div>
   );
 }
-
-export default Nickname;
